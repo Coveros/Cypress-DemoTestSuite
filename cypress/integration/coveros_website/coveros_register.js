@@ -7,20 +7,21 @@ const welcomePage = new WelcomePage();
 
 describe('Successfull Registration Tests', function(){
     it ('Go To Coveros web page and submit a registration form', function(){
-        //arrange
         name = NameMaker.makeName(5);
-        //act
-        registrationTab.visit();
+
+        cy.visit('http://localhost/login');
+        cy.contains('Register').click();
         registrationTab.fillIn(name, name, name, name+"@gmail.com", "aaa", "aaa");
         registrationTab.submit();
-        //assert
+
         welcomePage.getUserMenuItem().should('exist');
     })
 })
 
 describe('Registraton Failed - Invalid credentials', function(){
     this.beforeEach(() => {
-        registrationTab.visit();
+        cy.visit('http://localhost/login');
+        cy.contains('Register').click();
     })
 
     it ('Try to create a new user without username', function(){
@@ -80,27 +81,16 @@ describe('Registraton Failed - Invalid credentials', function(){
 
     describe('Registration Failed - Register a user twice', function(){
         it ('Try to register the same user twice', function(){
-            //arrange
-            name = NameMaker.makeName(5);
-            userName = name;
-            password = "aat";
-            cy.request('POST', 'http://localhost/api/auth/register', {
-            "firstName": name,
-            "lastName": name,
-            "username": userName,
-            "email": name+"@gmail.com",
-            "password": password
-            }).then(cy.request('POST', 'http://localhost/api/auth/register', {
-                "firstName": name,
-                "lastName": name,
-                "username": userName,
-                "email": name+"@gmail.com",
-                "password": password
-                }).then((resp) => {
-                    // redirect status code is 500
-                    expect(resp.status).to.eq(500);
-                })       
-            )
+            var name = NameMaker.makeName(5);
+    
+            registrationTab.fillIn(name, name, name, name+"@gmail.com", "aaa", "aaa");
+            registrationTab.submit();
+            welcomePage.signOut();
+            cy.contains('Register').click();
+            registrationTab.fillIn(name, name, name, name+"@gmail.com", "aaa", "aaa");
+            registrationTab.submit();
+
+            registrationTab.getRegistrationFailedMessage().should('exist');
         })
     })
 })

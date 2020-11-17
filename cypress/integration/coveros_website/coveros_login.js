@@ -7,17 +7,15 @@ const login = new LoginTab();
 
 describe('Authorized User Login Tests', function(){
     var name = null;
-    var userName = null;
     var password = null;
 
     beforeEach(() => {
         name = NameMaker.makeName(6);
-        userName = name;
         password = "aat";
         cy.request('POST', 'http://localhost/api/auth/register', {
             "firstName": name,
             "lastName": name,
-            "username": userName,
+            "username": name,
             "email": name+"@gmail.com",
             "password": password
         }).then((response) => {
@@ -29,24 +27,21 @@ describe('Authorized User Login Tests', function(){
 
     it ('Successfully Log In', function(){
 
-        //login.visit();
-        login.fillIn(userName, password);
+        login.fillIn(name, password);
         login.submit();
 
         welcomePage.getUserMenuItem().should('exist');
     })
    
     it ('Loging Failed - Missing username', function(){
-        //login.visit();
-        login.fillIn(userName, password);
+        login.fillIn(name, password);
         login.clearUsernameField();
 
         login.getRequiredFieldErrorMessage().should('exist');
     })
 
     it ('Loging Failed - Missing Password', function(){
-        //login.visit();
-        login.fillIn(userName, password);
+        login.fillIn(name, password);
         login.clearPasswordField();
         login.usernameInputClick();
 

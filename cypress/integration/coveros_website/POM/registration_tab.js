@@ -1,5 +1,3 @@
-import { NameMaker } from '/Users/anaskvortsova/Desktop/Selenium Alternatives/cyber.io/cypress/integration/coveros_website/Utilities/name_maker';
-
 const FIRST_NAME_INPUT = 'input[id="register-firstname"]'
 const SECOND_NAME_INPUT = 'input[id="register-lastname"]'
 const USER_NAME_INPUT = 'input[id="register-username"]'
